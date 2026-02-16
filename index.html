@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>歴史一問一答 - 新しい国際秩序の形成と冷戦のはじまり</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            color: #e0e0e0;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* ヘッダー */
+        header {
+            text-align: center;
+            padding: 30px 0 20px;
+        }
+
+        header h1 {
+            font-size: 1.8rem;
+            color: #e94560;
+            margin-bottom: 5px;
+        }
+
+        header p {
+            font-size: 0.9rem;
+            color: #a0a0b0;
+        }
+
+        /* 進捗バー */
+        .progress-section {
+            margin: 20px 0;
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 0.85rem;
+            color: #a0a0b0;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #2a2a4a;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #e94560, #ff6b6b);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        /* スコア表示 */
+        .score-display {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin: 15px 0;
+        }
+
+        .score-item {
+            background: #1e1e3a;
+            padding: 10px 20px;
+            border-radius: 10px;
+            text-align: center;
+            min-width: 80px;
+        }
+
+        .score-item .num {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .score-item .label {
+            font-size: 0.75rem;
+            color: #a0a0b0;
+        }
+
+        .score-correct .num { color: #4ecdc4; }
+        .score-wrong .num { color: #e94560; }
+        .score-remain .num { color: #f9d423; }
+
+        /* モード選択 */
+        .mode-selector {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .mode-btn {
+            padding: 8px 18px;
+            border: 2px solid #3a3a5a;
+            background: transparent;
+            color: #c0c0d0;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.3s;
+        }
+
+        .mode-btn:hover {
+            border-color: #e94560;
+            color: #e94560;
+        }
+
+        .mode-btn.active {
+            border-color: #e94560;
+            background: #e94560;
+            color: white;
+        }
+
+        /* クイズカード */
+        .quiz-card {
+            background: #1e1e3a;
+            border-radius: 16px;
+            padding: 30px;
+            margin: 20px 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .quiz-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #e94560, #f9d423);
+        }
+
+        .category-tag {
+            display: inline-block;
+            padding: 4px 12px;
+            background: #2a2a4a;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            color: #f9d423;
+            margin-bottom: 15px;
+        }
+
+        .question-number {
+            font-size: 0.85rem;
+            color: #a0a0b0;
+            margin-bottom: 10px;
+        }
+
+        .question-text {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            margin-bottom: 25px;
+            color: #ffffff;
+        }
+
+        /* 入力エリア */
+        .answer-section {
+            margin-top: 20px;
+        }
+
+        .answer-input-wrap {
+            display: flex;
+            gap: 10px;
+        }
+
+        .answer-input {
+            flex: 1;
+            padding: 12px 16px;
+            background: #2a2a4a;
+            border: 2px solid #3a3a5a;
+            border-radius: 10px;
+            color: #ffffff;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .answer-input:focus {
+            border-color: #e94560;
+        }
+
+        .answer-input::placeholder {
+            color: #606080;
+        }
+
+        .submit-btn {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #e94560, #ff6b6b);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            white-space: nowrap;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(233, 69, 96, 0.4);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* 回答結果 */
+        .result-display {
+            margin-top: 20px;
+            padding: 15px 20px;
+            border-radius: 10px;
+            display: none;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .result-correct {
+            background: rgba(78, 205, 196, 0.15);
+            border-left: 4px solid #4ecdc4;
+        }
+
+        .result-wrong {
+            background: rgba(233, 69, 96, 0.15);
+            border-left: 4px solid #e94560;
+        }
+
+        .result-icon {
+            font-size: 1.3rem;
+            margin-right: 8px;
+        }
+
+        .result-answer {
+            margin-top: 8px;
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+
+        .result-correct .result-answer { color: #4ecdc4; }
+        .result-wrong .result-answer { color: #e94560; }
+
+        .next-btn {
+            display: none;
+            margin-top: 15px;
+            padding: 10px 30px;
+            background: #3a3a5a;
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .next-btn:hover {
+            background: #4a4a6a;
+        }
+
+        /* 選択肢モード */
+        .choices-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .choice-btn {
+            padding: 14px 16px;
+            background: #2a2a4a;
+            border: 2px solid #3a3a5a;
+            border-radius: 10px;
+            color: #e0e0e0;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .choice-btn:hover:not(.chosen) {
+            border-color: #e94560;
+            background: #2a2a50;
+        }
+
+        .choice-btn.chosen-correct {
+            border-color: #4ecdc4;
+            background: rgba(78, 205, 196, 0.2);
+            color: #4ecdc4;
+        }
+
+        .choice-btn.chosen-wrong {
+            border-color: #e94560;
+            background: rgba(233, 69, 96, 0.2);
+            color: #e94560;
+        }
+
+        .choice-btn.show-correct {
+            border-color: #4ecdc4;
+            background: rgba(78, 205, 196, 0.1);
+        }
+
+        /* 結果画面 */
+        .final-result {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .final-result h2 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            color: #f9d423;
+        }
+
+        .final-score {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #4ecdc4;
+            margin: 20px 0;
+        }
+
+        .final-score span {
+            font-size: 1.5rem;
+            color: #a0a0b0;
+        }
+
+        .final-message {
+            font-size: 1.1rem;
+            color: #c0c0d0;
+            margin: 15px 0 30px;
+        }
+
+        .restart-btn {
+            padding: 14px 40px;
+            background: linear-gradient(135deg, #e94560, #ff6b6b);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: transform 0.2s;
+            margin: 5px;
+        }
+
+        .restart-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .retry-wrong-btn {
+            padding: 14px 40px;
+            background: transparent;
+            border: 2px solid #e94560;
+            border-radius: 12px;
+            color: #e94560;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin: 5px;
+        }
+
+        .retry-wrong-btn:hover {
+            background: rgba(233, 69, 96, 0.1);
+            transform: translateY(-2px);
+        }
+
+        /* スタート画面 */
+        .start-screen {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .start-screen h2 {
+            font-size: 1.5rem;
+            color: #f9d423;
+            margin-bottom: 15px;
+        }
+
+        .start-screen p {
+            color: #a0a0b0;
+            margin-bottom: 5px;
+        }
+
+        .start-btn {
+            margin-top: 30px;
+            padding: 14px 50px;
+            background: linear-gradient(135deg, #e94560, #ff6b6b);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .start-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .shuffle-option {
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            color: #a0a0b0;
+            font-size: 0.9rem;
+        }
+
+        .shuffle-option input[type="checkbox"] {
+            accent-color: #e94560;
+            width: 18px;
+            height: 18px;
+        }
+
+        /* レスポンシブ */
+        @media (max-width: 500px) {
+            header h1 { font-size: 1.4rem; }
+            .quiz-card { padding: 20px; }
+            .question-text { font-size: 1.05rem; }
+            .choices-grid { grid-template-columns: 1fr; }
+            .answer-input-wrap { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>歴史総合 一問一答</h1>
+            <p>プリント23 新しい国際秩序の形成と冷戦のはじまり</p>
+        </header>
+
+        <div id="app"></div>
+    </div>
+
+    <script>
+    const quizData = [
+        // 1. 新しい国際秩序の形成
+        {
+            category: "新しい国際秩序の形成",
+            question: "1945年に設立された、国際平和と安全の維持を目的とする国際機関は何か。",
+            answer: "国際連合"
+        },
+        {
+            category: "新しい国際秩序の形成",
+            question: "国際連合の本部が置かれた都市はどこか。",
+            answer: "ニューヨーク"
+        },
+        {
+            category: "新しい国際秩序の形成",
+            question: "国際連合の安全保障理事会で、常任理事国が持つ、決議を否決できる権限を何というか。",
+            answer: "拒否権"
+        },
+        {
+            category: "新しい国際秩序の形成",
+            question: "国際連合の安全保障理事会の常任理事国は、アメリカ・イギリス・フランス・ソ連ともう一つはどこか。",
+            answer: "中華民国"
+        },
+        {
+            category: "新しい国際秩序の形成",
+            question: "1945年のニュルンベルク裁判や極東国際軍事裁判（東京裁判）で裁かれた、戦争を計画・遂行した罪を何というか。",
+            answer: "平和に対する罪"
+        },
+        {
+            category: "新しい国際秩序の形成",
+            question: "ドイツのニュルンベルクや東京で行われた裁判で、非人道的行為に対する罪を何というか。",
+            answer: "人道に対する罪"
+        },
+        {
+            category: "新しい国際秩序の形成",
+            question: "自由貿易の推進を目的として1947年に結ばれた、関税と貿易に関する一般協定の略称は何か。",
+            answer: "GATT"
+        },
+        {
+            category: "新しい国際秩序の形成",
+            question: "国際通貨の安定を目的として設立された国際通貨基金の略称は何か。",
+            answer: "IMF"
+        },
+        {
+            category: "新しい国際秩序の形成",
+            question: "IMFを中心とした、ドルを基軸通貨とする固定為替相場制の国際経済体制を何というか。",
+            answer: "ブレトンウッズ体制"
+        },
+        // 2. 冷戦のはじまり
+        {
+            category: "冷戦のはじまり",
+            question: "第二次世界大戦後、アメリカを中心とする西側陣営とソ連を中心とする東側陣営が、直接戦争をせずに対立したことを何というか。",
+            answer: "冷戦"
+        },
+        {
+            category: "冷戦のはじまり",
+            question: "1947年、アメリカ大統領トルーマンが表明した、共産主義の拡大を封じ込める政策を何というか。",
+            answer: "トルーマン=ドクトリン"
+        },
+        {
+            category: "冷戦のはじまり",
+            question: "アメリカが西ヨーロッパ諸国の経済復興を支援するために実施した計画を何というか。",
+            answer: "マーシャル=プラン"
+        },
+        {
+            category: "冷戦のはじまり",
+            question: "1949年、アメリカを中心とする西側諸国が結成した軍事同盟は何か。",
+            answer: "NATO"
+        },
+        {
+            category: "冷戦のはじまり",
+            question: "NATOの正式名称は何か。",
+            answer: "北大西洋条約機構"
+        },
+        {
+            category: "冷戦のはじまり",
+            question: "1955年、ソ連を中心とする東側諸国が結成した軍事同盟は何か。",
+            answer: "ワルシャワ条約機構"
+        },
+        {
+            category: "冷戦のはじまり",
+            question: "1948〜49年、ソ連が西ベルリンへの交通を遮断した事件を何というか。",
+            answer: "ベルリン封鎖"
+        },
+        {
+            category: "冷戦のはじまり",
+            question: "1949年に成立した、西側に属するドイツの国家は何か。",
+            answer: "ドイツ連邦共和国"
+        },
+        {
+            category: "冷戦のはじまり",
+            question: "1949年に成立した、東側に属するドイツの国家は何か。",
+            answer: "ドイツ民主共和国"
+        },
+        // 3. アジアの冷戦
+        {
+            category: "アジアの冷戦",
+            question: "1949年、毛沢東が建国を宣言した国は何か。",
+            answer: "中華人民共和国"
+        },
+        {
+            category: "アジアの冷戦",
+            question: "中華人民共和国の建国後、蒋介石の国民政府が逃れた先はどこか。",
+            answer: "台湾"
+        },
+        {
+            category: "アジアの冷戦",
+            question: "1950年に北朝鮮が韓国に侵攻して始まった戦争を何というか。",
+            answer: "朝鮮戦争"
+        },
+        {
+            category: "アジアの冷戦",
+            question: "朝鮮戦争の際、アメリカ軍を主力として朝鮮半島に派遣された軍を何というか。",
+            answer: "国連軍"
+        },
+        {
+            category: "アジアの冷戦",
+            question: "朝鮮戦争は1953年に休戦したが、南北の境界線はどのあたりに設定されたか。",
+            answer: "北緯38度線"
+        },
+        // 4. 日本の戦後改革
+        {
+            category: "日本の戦後改革",
+            question: "第二次世界大戦後、日本を間接統治した連合国軍最高司令官総司令部の略称は何か。",
+            answer: "GHQ"
+        },
+        {
+            category: "日本の戦後改革",
+            question: "GHQの最高司令官を務めた人物は誰か。",
+            answer: "マッカーサー"
+        },
+        {
+            category: "日本の戦後改革",
+            question: "戦後、財閥の解体・農地改革と並んで実施された、労働者の権利を保障する改革を何というか。",
+            answer: "労働改革"
+        },
+        {
+            category: "日本の戦後改革",
+            question: "地主の農地を政府が買い上げて小作人に安く売り渡した改革を何というか。",
+            answer: "農地改革"
+        },
+        {
+            category: "日本の戦後改革",
+            question: "1946年に公布された、国民主権・基本的人権の尊重・平和主義を三大原則とする憲法は何か。",
+            answer: "日本国憲法"
+        },
+        {
+            category: "日本の戦後改革",
+            question: "朝鮮戦争をきっかけとして日本に設置された、後に自衛隊の前身となった組織は何か。",
+            answer: "警察予備隊"
+        },
+        {
+            category: "日本の戦後改革",
+            question: "1951年、日本が西側諸国48か国と結んだ講和条約は何か。",
+            answer: "サンフランシスコ平和条約"
+        },
+        {
+            category: "日本の戦後改革",
+            question: "サンフランシスコ平和条約と同時に結ばれた、アメリカ軍の日本駐留を認めた条約は何か。",
+            answer: "日米安全保障条約"
+        },
+        {
+            category: "日本の戦後改革",
+            question: "朝鮮戦争による軍需物資の大量注文で、日本経済が好況になったことを何というか。",
+            answer: "特需景気"
+        },
+    ];
+
+    // アプリ状態
+    let state = {
+        mode: 'input',       // 'input' or 'choice'
+        shuffle: true,
+        questions: [],
+        currentIndex: 0,
+        correct: 0,
+        wrong: 0,
+        wrongList: [],
+        screen: 'start',    // 'start', 'quiz', 'result'
+        answered: false
+    };
+
+    const app = document.getElementById('app');
+
+    function shuffleArray(arr) {
+        const a = [...arr];
+        for (let i = a.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [a[i], a[j]] = [a[j], a[i]];
+        }
+        return a;
+    }
+
+    function generateChoices(correctAnswer, allAnswers) {
+        const others = allAnswers.filter(a => a !== correctAnswer);
+        const shuffled = shuffleArray(others);
+        const choices = [correctAnswer, ...shuffled.slice(0, 3)];
+        return shuffleArray(choices);
+    }
+
+    function startQuiz(questions) {
+        state.questions = state.shuffle ? shuffleArray(questions) : [...questions];
+        state.currentIndex = 0;
+        state.correct = 0;
+        state.wrong = 0;
+        state.wrongList = [];
+        state.screen = 'quiz';
+        state.answered = false;
+        render();
+    }
+
+    function checkAnswer(userAnswer) {
+        if (state.answered) return;
+        state.answered = true;
+
+        const q = state.questions[state.currentIndex];
+        const correct = normalize(userAnswer) === normalize(q.answer);
+
+        if (correct) {
+            state.correct++;
+        } else {
+            state.wrong++;
+            state.wrongList.push(q);
+        }
+
+        renderQuizWithResult(correct, q.answer, userAnswer);
+    }
+
+    function normalize(str) {
+        return str.trim()
+            .replace(/\s+/g, '')
+            .replace(/[Ａ-Ｚａ-ｚ０-９]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0));
+    }
+
+    function nextQuestion() {
+        state.currentIndex++;
+        state.answered = false;
+        if (state.currentIndex >= state.questions.length) {
+            state.screen = 'result';
+        }
+        render();
+    }
+
+    function render() {
+        if (state.screen === 'start') renderStart();
+        else if (state.screen === 'quiz') renderQuiz();
+        else if (state.screen === 'result') renderResult();
+    }
+
+    function renderStart() {
+        const categories = [...new Set(quizData.map(q => q.category))];
+        app.innerHTML = `
+            <div class="quiz-card start-screen">
+                <h2>テスト対策 一問一答</h2>
+                <p>全 ${quizData.length} 問</p>
+                <p style="margin-top:10px; font-size:0.85rem;">カテゴリ: ${categories.join(' / ')}</p>
+
+                <div class="mode-selector" style="margin-top:25px;">
+                    <button class="mode-btn ${state.mode === 'input' ? 'active' : ''}" onclick="setMode('input')">入力モード</button>
+                    <button class="mode-btn ${state.mode === 'choice' ? 'active' : ''}" onclick="setMode('choice')">選択肢モード</button>
+                </div>
+
+                <div class="shuffle-option">
+                    <input type="checkbox" id="shuffleCheck" ${state.shuffle ? 'checked' : ''} onchange="state.shuffle=this.checked">
+                    <label for="shuffleCheck">問題をシャッフルする</label>
+                </div>
+
+                <button class="start-btn" onclick="startQuiz(quizData)">スタート</button>
+            </div>
+        `;
+    }
+
+    function setMode(mode) {
+        state.mode = mode;
+        render();
+    }
+
+    function renderQuiz() {
+        const q = state.questions[state.currentIndex];
+        const total = state.questions.length;
+        const remaining = total - state.currentIndex - (state.answered ? 1 : 0);
+        const progress = ((state.currentIndex) / total) * 100;
+
+        let answerHTML = '';
+        if (state.mode === 'input') {
+            answerHTML = `
+                <div class="answer-section">
+                    <div class="answer-input-wrap">
+                        <input type="text" class="answer-input" id="answerInput" placeholder="答えを入力..." autocomplete="off">
+                        <button class="submit-btn" id="submitBtn" onclick="submitAnswer()">解答</button>
+                    </div>
+                </div>
+            `;
+        } else {
+            const allAnswers = [...new Set(quizData.map(d => d.answer))];
+            const choices = generateChoices(q.answer, allAnswers);
+            answerHTML = `
+                <div class="choices-grid">
+                    ${choices.map((c, i) => `<button class="choice-btn" onclick="choiceAnswer('${c.replace(/'/g, "\\'")}')">${c}</button>`).join('')}
+                </div>
+            `;
+        }
+
+        app.innerHTML = `
+            <div class="progress-section">
+                <div class="progress-info">
+                    <span>問題 ${state.currentIndex + 1} / ${total}</span>
+                    <span>${Math.round(progress)}%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width:${progress}%"></div>
+                </div>
+            </div>
+
+            <div class="score-display">
+                <div class="score-item score-correct">
+                    <div class="num">${state.correct}</div>
+                    <div class="label">正解</div>
+                </div>
+                <div class="score-item score-wrong">
+                    <div class="num">${state.wrong}</div>
+                    <div class="label">不正解</div>
+                </div>
+                <div class="score-item score-remain">
+                    <div class="num">${remaining}</div>
+                    <div class="label">残り</div>
+                </div>
+            </div>
+
+            <div class="quiz-card">
+                <span class="category-tag">${q.category}</span>
+                <div class="question-number">第${state.currentIndex + 1}問</div>
+                <div class="question-text">${q.question}</div>
+                ${answerHTML}
+                <div class="result-display" id="resultDisplay"></div>
+                <button class="next-btn" id="nextBtn" onclick="nextQuestion()">次の問題へ</button>
+            </div>
+        `;
+
+        if (state.mode === 'input') {
+            const input = document.getElementById('answerInput');
+            input.focus();
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' && !state.answered) {
+                    submitAnswer();
+                }
+            });
+
+            // IME確定のEnterで送信されないようにする
+            input.addEventListener('compositionend', () => {
+                input.dataset.composing = 'false';
+            });
+            input.addEventListener('compositionstart', () => {
+                input.dataset.composing = 'true';
+            });
+        }
+    }
+
+    function submitAnswer() {
+        const input = document.getElementById('answerInput');
+        if (!input || !input.value.trim()) return;
+        checkAnswer(input.value);
+    }
+
+    function choiceAnswer(choice) {
+        checkAnswer(choice);
+    }
+
+    function renderQuizWithResult(correct, correctAnswer, userAnswer) {
+        const resultEl = document.getElementById('resultDisplay');
+        const nextBtn = document.getElementById('nextBtn');
+        const submitBtn = document.getElementById('submitBtn');
+
+        if (submitBtn) submitBtn.disabled = true;
+
+        if (correct) {
+            resultEl.className = 'result-display result-correct';
+            resultEl.innerHTML = `
+                <span class="result-icon">&#10004;</span> 正解！
+                <div class="result-answer">${correctAnswer}</div>
+            `;
+        } else {
+            resultEl.className = 'result-display result-wrong';
+            resultEl.innerHTML = `
+                <span class="result-icon">&#10008;</span> 不正解
+                <div class="result-answer">正解: ${correctAnswer}</div>
+                ${state.mode === 'input' ? `<div style="margin-top:5px;font-size:0.85rem;color:#a0a0b0;">あなたの回答: ${userAnswer}</div>` : ''}
+            `;
+        }
+
+        resultEl.style.display = 'block';
+        nextBtn.style.display = 'inline-block';
+
+        // 選択肢モードの場合、ボタンの色を変える
+        if (state.mode === 'choice') {
+            const btns = document.querySelectorAll('.choice-btn');
+            btns.forEach(btn => {
+                btn.classList.add('chosen');
+                btn.style.pointerEvents = 'none';
+                if (btn.textContent === correctAnswer) {
+                    btn.classList.add('chosen-correct');
+                } else if (btn.textContent === userAnswer) {
+                    btn.classList.add('chosen-wrong');
+                }
+            });
+        }
+
+        // 次の問題へのショートカット (Enter/Space)
+        const handler = (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                document.removeEventListener('keydown', handler);
+                nextQuestion();
+            }
+        };
+        setTimeout(() => document.addEventListener('keydown', handler), 200);
+    }
+
+    function renderResult() {
+        const total = state.questions.length;
+        const pct = Math.round((state.correct / total) * 100);
+        let msg = '';
+        if (pct === 100) msg = '完璧です！素晴らしい！';
+        else if (pct >= 80) msg = 'とても良い成績です！';
+        else if (pct >= 60) msg = 'あと少しで合格ライン！';
+        else if (pct >= 40) msg = '復習して再チャレンジ！';
+        else msg = '基礎からしっかり覚えよう！';
+
+        let wrongListHTML = '';
+        if (state.wrongList.length > 0) {
+            wrongListHTML = `
+                <div style="text-align:left;margin-top:30px;">
+                    <h3 style="color:#e94560;margin-bottom:10px;">間違えた問題</h3>
+                    ${state.wrongList.map((q, i) => `
+                        <div style="background:#2a2a4a;padding:12px 16px;border-radius:8px;margin-bottom:8px;">
+                            <div style="font-size:0.8rem;color:#f9d423;">${q.category}</div>
+                            <div style="margin:5px 0;color:#c0c0d0;font-size:0.9rem;">Q. ${q.question}</div>
+                            <div style="color:#4ecdc4;font-weight:bold;">A. ${q.answer}</div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        app.innerHTML = `
+            <div class="quiz-card final-result">
+                <h2>結果発表</h2>
+                <div class="final-score">${state.correct}<span> / ${total}</span></div>
+                <div style="font-size:1.3rem;color:#a0a0b0;">${pct}%</div>
+                <div class="final-message">${msg}</div>
+
+                <div class="score-display" style="margin-bottom:20px;">
+                    <div class="score-item score-correct">
+                        <div class="num">${state.correct}</div>
+                        <div class="label">正解</div>
+                    </div>
+                    <div class="score-item score-wrong">
+                        <div class="num">${state.wrong}</div>
+                        <div class="label">不正解</div>
+                    </div>
+                </div>
+
+                <button class="restart-btn" onclick="state.screen='start';render();">もう一度</button>
+                ${state.wrongList.length > 0 ? `<button class="retry-wrong-btn" onclick="startQuiz(state.wrongList)">間違えた問題だけ</button>` : ''}
+
+                ${wrongListHTML}
+            </div>
+        `;
+    }
+
+    // 初期描画
+    render();
+    </script>
+</body>
+</html>
